@@ -116,6 +116,13 @@ body::before {
 .contact-item span:first-child {
   font-size: 1rem;
 }
+.contact-item a {
+    text-decoration: none;
+    color: hsl(40 20% 85%);;
+}
+.contact-item a:hover {
+    color: hsl(40 60% 55%);
+}
 /* Social buttons */
 .social-links {
   display: flex;
