@@ -42,7 +42,8 @@ body {
   padding-bottom: 0.75rem;
   transition: background 0.2s ease;
 }
-.view-tabs button {
+.view-tabs button,
+.view-tabs a {
   background: none;
   border: 1px solid var(--border);
   color: var(--text-muted);
@@ -50,10 +51,13 @@ body {
   border-radius: var(--radius);
   cursor: pointer;
   font-size: 0.9rem;
+  text-decoration: none;
   transition: all 0.2s;
 }
-.view-tabs button:hover { border-color: var(--accent); color: var(--text); }
-.view-tabs button.active {
+.view-tabs button:hover,
+.view-tabs a:hover { border-color: var(--accent); color: var(--text); }
+.view-tabs button.active,
+.view-tabs a.active {
   background: var(--accent);
   border-color: var(--accent);
   color: #fff;

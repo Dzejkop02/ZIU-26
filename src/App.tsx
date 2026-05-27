@@ -1,36 +1,29 @@
 import { useState } from 'react';
-import { useFetchMovies } from './hooks/useFetchMovies';
-import { useDebounce } from './hooks/useDebounce';
-import { MovieCard } from './components/MovieCard';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { MovieModal } from './components/MovieModal';
-import { SkeletonCard } from './components/SkeletonCard';
-import { ErrorBanner } from './components/ErrorBanner';
-import { EmptyState } from './components/EmptyState';
-import { SearchBar } from './components/SearchBar';
-import { Pagination } from './components/Pagination';
-import { FavoritesList } from './components/FavoritesList';
-import { InfiniteMovieList } from './components/InfiniteMovieList';
+import { ClassicPage } from './pages/ClassicPage';
+import { InfinitePage } from './pages/InfinitePage';
+import { FavoritesPage } from './pages/FavoritesPage';
 import type { Movie } from './hooks/useFetchMovies';
 
-type View = 'classic' | 'infinite' | 'favorites';
+const pageVariants = {
+  initial: { opacity: 0, x: -16 },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.28, ease: 'easeOut' as const },
+  },
+  exit: {
+    opacity: 0,
+    x: 16,
+    transition: { duration: 0.18, ease: 'easeIn' as const },
+  },
+};
 
 export default function App() {
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
+  const location = useLocation();
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-  const [view, setView] = useState<View>('classic');
-
-  const debouncedQuery = useDebounce(query, 300);
-
-  const { data, isLoading, isError, error, refetch, isPlaceholderData } = useFetchMovies(
-    page,
-    debouncedQuery
-  );
-
-  const handleQueryChange = (v: string) => {
-    setQuery(v);
-    setPage(1);
-  };
 
   const handleMovieClick = (movie: Movie) => {
     setSelectedMovieId(movie.id);
@@ -44,68 +37,61 @@ export default function App() {
       </header>
 
       <nav className="view-tabs">
-        <button className={view === 'classic' ? 'active' : ''} onClick={() => setView('classic')}>
+        <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
           📄 Klasyczna paginacja
-        </button>
-        <button className={view === 'infinite' ? 'active' : ''} onClick={() => setView('infinite')}>
+        </NavLink>
+        <NavLink to="/infinite" className={({ isActive }) => (isActive ? 'active' : '')}>
           ♾️ Infinite scroll
-        </button>
-        <button className={view === 'favorites' ? 'active' : ''} onClick={() => setView('favorites')}>
+        </NavLink>
+        <NavLink to="/favorites" className={({ isActive }) => (isActive ? 'active' : '')}>
           ❤️ Ulubione
-        </button>
+        </NavLink>
       </nav>
 
       <main className="app-main">
-        {view !== 'favorites' && (
-          <SearchBar value={query} onChange={handleQueryChange} />
-        )}
-
-        {view === 'classic' && (
-          <>
-            <div className={`movie-grid ${isPlaceholderData ? 'faded' : ''}`}>
-              {isLoading &&
-                Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)}
-
-              {isError && (
-                <div className="full-width">
-                  <ErrorBanner
-                    message={(error as Error)?.message ?? 'Błąd ładowania danych'}
-                    onRetry={() => refetch()}
-                  />
-                </div>
-              )}
-
-              {!isLoading && !isError && data?.results.length === 0 && (
-                <div className="full-width">
-                  <EmptyState />
-                </div>
-              )}
-
-              {!isLoading &&
-                !isError &&
-                data?.results.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} onClick={handleMovieClick} />
-                ))}
-            </div>
-
-            {data && data.total_pages > 1 && (
-              <Pagination
-                page={page}
-                totalPages={data.total_pages}
-                onPageChange={setPage}
-                isPlaceholderData={isPlaceholderData}
-              />
-            )}
-          </>
-        )}
-
-        {view === 'infinite' && (
-          <InfiniteMovieList query={debouncedQuery} onMovieClick={handleMovieClick} />
-        )}
-
-        {view === 'favorites' && (
-          <FavoritesList onMovieClick={handleMovieClick} />
-        )}
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route
+              path="/"
+              element={
+                <motion.div
+                  variants={pageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <ClassicPage onMovieClick={handleMovieClick} />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/infinite"
+              element={
+                <motion.div
+                  variants={pageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <InfinitePage onMovieClick={handleMovieClick} />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/favorites"
+              element={
+                <motion.div
+                  variants={pageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <FavoritesPage onMovieClick={handleMovieClick} />
+                </motion.div>
+              }
+            />
+          </Routes>
+        </AnimatePresence>
       </main>
 
       <MovieModal
