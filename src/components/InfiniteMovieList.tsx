@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useInfiniteMovies } from '../hooks/useInfiniteMovies';
 import { MovieCard } from './MovieCard';
 import { SkeletonCard } from './SkeletonCard';
@@ -8,6 +9,19 @@ interface Props {
   query: string;
   onMovieClick: (movie: Movie) => void;
 }
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 export function InfiniteMovieList({ query, onMovieClick }: Props) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
@@ -32,15 +46,30 @@ export function InfiniteMovieList({ query, onMovieClick }: Props) {
 
   return (
     <>
-      <div className="movie-grid">
-        {isLoading && Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)}
+      <motion.ul
+        className="movie-grid"
+        style={{ listStyle: 'none', padding: 0 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        // key zmusza re-stagger gdy query się zmienia
+        key={query}
+      >
+        {isLoading && Array.from({ length: 12 }).map((_, i) => (
+          <li key={i}><SkeletonCard /></li>
+        ))}
+
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} onClick={onMovieClick} />
+          <motion.li key={movie.id} variants={itemVariants}>
+            <MovieCard movie={movie} onClick={onMovieClick} />
+          </motion.li>
         ))}
+
         {isFetchingNextPage && Array.from({ length: 4 }).map((_, i) => (
-          <SkeletonCard key={`sk-${i}`} />
+          <li key={`sk-${i}`}><SkeletonCard /></li>
         ))}
-      </div>
+      </motion.ul>
+
       <div ref={sentinelRef} style={{ height: 1 }} />
     </>
   );

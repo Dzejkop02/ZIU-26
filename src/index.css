@@ -240,8 +240,18 @@ body {
 /* FAVORITES SIDEBAR */
 .favorites-list { padding: 1rem 0; }
 .favorites-list h2 { font-size: 1.25rem; margin-bottom: 1rem; }
-.favorites-list ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-.fav-item { display: flex; align-items: center; gap: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem; }
+/* Reorder.Group renderuje jako <ul> — styl nadal działa */
+.favorites-list ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.fav-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.5rem;
+  /* touch-action: none jest wymagane przez Framer Motion Reorder */
+  touch-action: none;
+  user-select: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.fav-item:hover { border-color: var(--accent); }
 .fav-item-btn { flex: 1; display: flex; align-items: center; gap: 0.75rem; background: none; border: none; color: var(--text); cursor: pointer; text-align: left; font-size: 0.9rem; }
 .fav-item-btn img { width: 40px; height: 60px; object-fit: cover; border-radius: 4px; }
 .fav-remove-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; padding: 0.25rem; }
