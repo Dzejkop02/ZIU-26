@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MovieModal } from './components/MovieModal';
+import { ToastContainer } from './components/ToastContainer';
 import { ClassicPage } from './pages/ClassicPage';
 import { InfinitePage } from './pages/InfinitePage';
 import { FavoritesPage } from './pages/FavoritesPage';
@@ -98,6 +99,8 @@ export default function App() {
         movieId={selectedMovieId}
         onClose={() => setSelectedMovieId(null)}
       />
+
+      <ToastContainer />
     </div>
   );
 }

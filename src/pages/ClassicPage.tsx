@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFetchMovies } from '../hooks/useFetchMovies';
 import { useDebounce } from '../hooks/useDebounce';
 import { MovieCard } from '../components/MovieCard';
-import { SkeletonCard } from '../components/SkeletonCard';
+import { MovieCardSkeleton } from '../components/Skeleton';
 import { ErrorBanner } from '../components/ErrorBanner';
 import { EmptyState } from '../components/EmptyState';
 import { SearchBar } from '../components/SearchBar';
@@ -16,6 +16,13 @@ interface Props {
 export function ClassicPage({ onMovieClick }: Props) {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
+  // Symulacja minimalnego czasu skeleton przy pierwszym załadowaniu
+  const [initializing, setInitializing] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setInitializing(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const debouncedQuery = useDebounce(query, 300);
 
@@ -34,9 +41,10 @@ export function ClassicPage({ onMovieClick }: Props) {
       <SearchBar value={query} onChange={handleQueryChange} />
 
       <div className={`movie-grid ${isPlaceholderData ? 'faded' : ''}`}>
-        {isLoading && Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)}
+        {(isLoading || initializing) &&
+          Array.from({ length: 12 }).map((_, i) => <MovieCardSkeleton key={i} />)}
 
-        {isError && (
+        {isError && !initializing && (
           <div className="full-width">
             <ErrorBanner
               message={(error as Error)?.message ?? 'Błąd ładowania danych'}
@@ -45,13 +53,14 @@ export function ClassicPage({ onMovieClick }: Props) {
           </div>
         )}
 
-        {!isLoading && !isError && data?.results.length === 0 && (
+        {!isLoading && !initializing && !isError && data?.results.length === 0 && (
           <div className="full-width">
             <EmptyState />
           </div>
         )}
 
         {!isLoading &&
+          !initializing &&
           !isError &&
           data?.results.map((movie) => (
             <MovieCard key={movie.id} movie={movie} onClick={onMovieClick} />

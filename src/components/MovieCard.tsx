@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useFavorites } from '../hooks/useFavorites';
+import { useToastContext } from '../context/ToastContext';
 import type { Movie } from '../hooks/useFetchMovies';
 import './MovieCard.css';
 
@@ -12,6 +13,7 @@ interface Props {
 
 export function MovieCard({ movie, onClick }: Props) {
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { addToast } = useToastContext();
   const [optimisticFav, setOptimisticFav] = useState<boolean | null>(null);
 
   const displayedFav = optimisticFav ?? isFavorite(movie.id);
@@ -19,15 +21,21 @@ export function MovieCard({ movie, onClick }: Props) {
   const handleToggle = useCallback(
     async (e: React.MouseEvent) => {
       e.stopPropagation();
-      setOptimisticFav(!displayedFav);
+      const willBeFav = !displayedFav;
+      setOptimisticFav(willBeFav);
       try {
         await toggleFavorite(movie);
+        addToast(
+          willBeFav ? `❤️ Dodano do ulubionych: ${movie.title}` : `🗑️ Usunięto z ulubionych: ${movie.title}`,
+          willBeFav ? 'success' : 'info'
+        );
         setOptimisticFav(null);
       } catch {
         setOptimisticFav(null);
+        addToast('❌ Błąd podczas zmiany ulubionych', 'error');
       }
     },
-    [displayedFav, toggleFavorite, movie]
+    [displayedFav, toggleFavorite, movie, addToast]
   );
 
   return (

@@ -256,6 +256,34 @@ body {
 .fav-item-btn img { width: 40px; height: 60px; object-fit: cover; border-radius: 4px; }
 .fav-remove-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; padding: 0.25rem; }
 
+/* TOASTS */
+.toast {
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  max-width: 320px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  border: 1px solid transparent;
+  line-height: 1.4;
+}
+.toast--success {
+  background: #0d3d1f;
+  border-color: #1a6b35;
+  color: #6ee79b;
+}
+.toast--error {
+  background: #3d0d0d;
+  border-color: #7a1f1f;
+  color: #f87171;
+}
+.toast--info {
+  background: var(--surface2);
+  border-color: var(--border);
+  color: var(--text);
+}
+
 @media (max-width: 600px) {
   .modal-body { flex-direction: column; }
   .modal-poster { width: 120px; }
