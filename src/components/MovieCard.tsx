@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useFavorites } from '../hooks/useFavorites';
 import { useToastContext } from '../context/ToastContext';
 import type { Movie } from '../hooks/useFetchMovies';
@@ -15,6 +16,13 @@ export function MovieCard({ movie, onClick }: Props) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const { addToast } = useToastContext();
   const [optimisticFav, setOptimisticFav] = useState<boolean | null>(null);
+
+  // Accessibility: przy prefers-reduced-motion animacja używa tylko fade (bez osi Y)
+  const shouldReduce = useReducedMotion();
+  const cardVariants = {
+    hidden: shouldReduce ? { opacity: 0 } : { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   const displayedFav = optimisticFav ?? isFavorite(movie.id);
 
@@ -39,8 +47,14 @@ export function MovieCard({ movie, onClick }: Props) {
   );
 
   return (
-    <div className="movie-card card" onClick={() => onClick?.(movie)} role="button" tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onClick?.(movie)}>
+    <motion.div
+      className="movie-card card"
+      onClick={() => onClick?.(movie)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onClick?.(movie)}
+      variants={cardVariants}
+    >
       <div className="movie-poster">
         <img
           src={movie.poster_path ? `${IMG_BASE}${movie.poster_path}` : '/no-poster.png'}
@@ -62,6 +76,6 @@ export function MovieCard({ movie, onClick }: Props) {
           {displayedFav ? '❤️' : '🤍'}
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
