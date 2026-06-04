@@ -1,3 +1,5 @@
+// Analytics inicjalizowane przed routerem — śledzi wszystkie pageviews automatycznie
+import './analytics.ts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StrictMode } from 'react';

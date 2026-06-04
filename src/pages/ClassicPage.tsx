@@ -5,7 +5,7 @@ import { MovieCard } from '../components/MovieCard';
 import { MovieCardSkeleton } from '../components/Skeleton';
 import { ErrorBanner } from '../components/ErrorBanner';
 import { EmptyState } from '../components/EmptyState';
-import { SearchBar } from '../components/SearchBar';
+import { SearchForm } from '../components/SearchForm';
 import { Pagination } from '../components/Pagination';
 import type { Movie } from '../hooks/useFetchMovies';
 
@@ -38,7 +38,7 @@ export function ClassicPage({ onMovieClick }: Props) {
 
   return (
     <>
-      <SearchBar value={query} onChange={handleQueryChange} />
+      <SearchForm onSearch={handleQueryChange} />
 
       <div className={`movie-grid ${isPlaceholderData ? 'faded' : ''}`}>
         {(isLoading || initializing) &&

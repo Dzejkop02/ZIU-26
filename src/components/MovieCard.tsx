@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useFavorites } from '../hooks/useFavorites';
 import { useToastContext } from '../context/ToastContext';
+import { plausible } from '../analytics.ts';
 import type { Movie } from '../hooks/useFetchMovies';
 import './MovieCard.css';
 
@@ -31,6 +32,11 @@ export function MovieCard({ movie, onClick }: Props) {
       e.stopPropagation();
       const willBeFav = !displayedFav;
       setOptimisticFav(willBeFav);
+      // RODO: Zbieramy lokalizację kliknięcia CTA. Brak danych osobowych.
+      // Cel: optymalizacja rozmieszczenia CTA — zasada minimalizacji art. 5 RODO.
+      plausible.trackEvent('CTA Click', {
+        props: { location: 'movie_card', action: willBeFav ? 'add_favorite' : 'remove_favorite' },
+      });
       try {
         await toggleFavorite(movie);
         addToast(
