@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 12 — Analiza sesji użytkowników</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f7fa;
+      color: #1a1a2e;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      padding: 2rem 3rem;
+    }
+    header h1 { font-size: 1.8rem; margin-bottom: 0.25rem; }
+    header p  { color: #a0aec0; font-size: 0.95rem; }
+
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem 4rem; }
+
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      color: #16213e;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid #4f46e5;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    h2 .badge {
+      font-size: 0.7rem;
+      background: #4f46e5;
+      color: #fff;
+      border-radius: 20px;
+      padding: 0.15rem 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    th {
+      background: #f1f5f9;
+      text-align: left;
+      padding: 0.6rem 0.85rem;
+      font-weight: 600;
+      color: #475569;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    td {
+      padding: 0.55rem 0.85rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr.highlight td { background: #fef9c3; font-weight: 600; }
+    tr:hover td { background: #f8fafc; }
+
+    .note {
+      font-size: 0.85rem;
+      color: #64748b;
+      background: #f1f5f9;
+      border-left: 4px solid #4f46e5;
+      padding: 0.65rem 1rem;
+      border-radius: 0 6px 6px 0;
+      margin-top: 0.75rem;
+    }
+
+    /* Bar chart */
+    .chart { margin: 1rem 0; }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.55rem;
+      gap: 0.75rem;
+    }
+    .bar-label {
+      width: 90px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .bar-wrap {
+      flex: 1;
+      background: #e2e8f0;
+      border-radius: 6px;
+      height: 28px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding-left: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+      transition: width 0.6s ease;
+    }
+    .bar-fill.step-1 { background: #4f46e5; }
+    .bar-fill.step-2 { background: #7c3aed; }
+    .bar-fill.step-3 { background: #db2777; }
+    .bar-fill.step-4 { background: #ea580c; }
+
+    /* Ranking */
+    .ranking { list-style: none; }
+    .ranking li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+    }
+    .ranking li:last-child { border-bottom: none; }
+    .rank-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #4f46e5;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .rank-num.gold   { background: #d97706; }
+    .rank-num.silver { background: #94a3b8; }
+    .rank-num.bronze { background: #92400e; }
+    .rank-name { flex: 1; font-family: monospace; color: #1e293b; }
+    .rank-count { font-weight: 700; color: #4f46e5; }
+
+    /* Device */
+    .device-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .device-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .device-card .icon  { font-size: 2rem; margin-bottom: 0.25rem; }
+    .device-card .name  { font-size: 0.8rem; color: #64748b; text-transform: capitalize; }
+    .device-card .pct   { font-size: 1.6rem; font-weight: 700; color: #4f46e5; }
+    .device-card .count { font-size: 0.78rem; color: #94a3b8; }
+
+    /* Conclusions */
+    .conclusions ol { padding-left: 1.5rem; }
+    .conclusions li { margin-bottom: 0.75rem; font-size: 0.92rem; }
+    .conclusions li strong { color: #4f46e5; }
+
+    /* Loading / error */
+    #status {
+      text-align: center;
+      padding: 3rem;
+      font-size: 1rem;
+      color: #64748b;
+    }
+    #status.error { color: #dc2626; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📊 Lab 12 — Analiza sesji użytkowników</h1>
+  <p>Źródło: sessions_lab12.csv &nbsp;·&nbsp; 712 wierszy &nbsp;·&nbsp; 8 kolumn</p>
+</header>
+
+<main id="app">
+  <div id="status">Wczytuję dane CSV…</div>
+</main>
+
+<script>
+// ─── Helpers ───────────────────────────────────────────────────────────────
+
+function pct(n, total) {
+  return total === 0 ? '0.0' : ((n / total) * 100).toFixed(1);
+}
+
+function isBounce(val) {
+  return val === true || val === 'true';
+}
+
+// ─── Funkcja 1: Bounce rate per strona ─────────────────────────────────────
+
+function bounceRateByPage(data) {
+  const map = {};
+  for (const row of data) {
+    const page = row.page || '(brak)';
+    if (!map[page]) map[page] = { total: 0, bounced: 0 };
+    map[page].total++;
+    if (isBounce(row.bounce)) map[page].bounced++;
+  }
+
+  const rows = Object.entries(map).map(([page, s]) => ({
+    page,
+    total: s.total,
+    bounced: s.bounced,
+    rate: s.total ? (s.bounced / s.total) * 100 : 0,
+  }));
+  rows.sort((a, b) => b.rate - a.rate);
+
+  const maxPage = rows[0]?.page;
+
+  let tableRows = '';
+  for (const r of rows) {
+    const cls = r.page === maxPage ? 'highlight' : '';
+    tableRows += `
+      <tr class="${cls}">
+        <td>${r.page}</td>
+        <td>${r.total}</td>
+        <td>${r.bounced}</td>
+        <td>${r.rate.toFixed(1)}%</td>
+      </tr>`;
+  }
+
+  return `
+    <div class="section" id="s1">
+      <h2>📄 Funkcja 1 <span class="badge">Bounce Rate</span></h2>
+      <table>
+        <thead>
+          <tr><th>Strona</th><th>Sesje</th><th>Odbiły</th><th>Bounce rate</th></tr>
+        </thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+      <p class="note">
+        ⚠️ Najwyższy bounce rate ma strona <strong>${maxPage}</strong>
+        (${rows[0]?.rate.toFixed(1)}%).
+        Może to oznaczać niedopasowanie treści do oczekiwań użytkownika lub
+        zbyt wolne ładowanie — warto porównać z medianą czasu sesji dla tej strony.
+      </p>
+    </div>`;
+}
+
+// ─── Funkcja 2: Form drop-off ───────────────────────────────────────────────
+
+function formDropOff(data) {
+  const formSessions = data.filter(
+    r => r.page === 'form' && r.form_step_reached !== '' && r.form_step_reached != null
+  );
+  const total = formSessions.length;
+
+  const stepCounts = { 1: 0, 2: 0, 3: 0, 4: 0 };
+  for (const row of formSessions) {
+    const step = parseInt(row.form_step_reached, 10);
+    if (step >= 1) stepCounts[1]++;
+    if (step >= 2) stepCounts[2]++;
+    if (step >= 3) stepCounts[3]++;
+    if (step >= 4) stepCounts[4]++;
+  }
+
+  // Krok z największym drop-off = największa różnica między krokiem N a N+1
+  let maxDrop = 0, maxDropStep = 1;
+  for (let s = 1; s <= 3; s++) {
+    const drop = stepCounts[s] - stepCounts[s + 1];
+    if (drop > maxDrop) { maxDrop = drop; maxDropStep = s; }
+  }
+
+  const stepLabels = {
+    1: 'Dane osobowe',
+    2: 'Adres dostawy',
+    3: 'Płatność',
+    4: 'Potwierdzenie',
+  };
+  const hypotheses = {
+    1: 'Użytkownicy mogą rezygnować już na etapie podania danych — rozważ uproszczenie pól lub dodanie "Zaloguj przez Google".',
+    2: 'Etap adresu dostawy bywa zniechęcający — zaproponuj autouzupełnianie lub geolokalizację.',
+    3: 'Krok płatności generuje największą nieufność — pokaż ikony SSL i znane metody płatności.',
+    4: 'Rzadkie porzucenia na ostatnim kroku — sprawdź czy przycisk "Kup" jest wystarczająco widoczny.',
+  };
+
+  let tableRows = '';
+  let bars = '';
+  for (let s = 1; s <= 4; s++) {
+    const p = pct(stepCounts[s], total);
+    tableRows += `<tr><td>Krok ${s} — ${stepLabels[s]}</td><td>${stepCounts[s]}</td><td>${p}%</td></tr>`;
+    bars += `
+      <div class="bar-row">
+        <div class="bar-label">Krok ${s}</div>
+        <div class="bar-wrap">
+          <div class="bar-fill step-${s}" style="width:${p}%">${p}%</div>
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="section" id="s2">
+      <h2>📋 Funkcja 2 <span class="badge">Form Drop-off</span></h2>
+      <table>
+        <thead><tr><th>Krok formularza</th><th>Sesje</th><th>% docierających</th></tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+      <div class="chart">${bars}</div>
+      <p class="note">
+        🔻 Największy drop-off następuje między krokiem <strong>${maxDropStep}</strong>
+        a krokiem <strong>${maxDropStep + 1}</strong>
+        (−${maxDrop} sesji, tj. ${pct(maxDrop, total)}% użytkowników).
+        Hipoteza: ${hypotheses[maxDropStep]}
+      </p>
+    </div>`;
+}
+
+// ─── Funkcja 3: Top kliknięcia ──────────────────────────────────────────────
+
+function topClicks(data, n) {
+  const counts = {};
+  for (const row of data) {
+    const el = row.element_clicked;
+    if (!el || el === '') continue;
+    counts[el] = (counts[el] || 0) + 1;
+  }
+
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, n);
+  const medalClass = ['gold', 'silver', 'bronze'];
+
+  const items = sorted.map(([name, count], i) => {
+    const cls = medalClass[i] || '';
+    return `
+      <li>
+        <span class="rank-num ${cls}">${i + 1}</span>
+        <span class="rank-name">${name}</span>
+        <span class="rank-count">${count}×</span>
+      </li>`;
+  }).join('');
+
+  return `
+    <div class="section" id="s3">
+      <h2>🖱️ Funkcja 3 <span class="badge">Top ${n} kliknięć</span></h2>
+      <ol class="ranking">${items}</ol>
+      <p class="note">
+        Elementy z listy to kandydaci do A/B testów — wysokie kliknięcia
+        mogą oznaczać zarówno popularność, jak i mylące etykiety (pułapka UX).
+      </p>
+    </div>`;
+}
+
+// ─── Funkcja 4 (bonus): Rozkład urządzeń ───────────────────────────────────
+
+function deviceDistribution(data) {
+  const counts = {};
+  for (const row of data) {
+    const d = (row.device || 'unknown').toLowerCase();
+    counts[d] = (counts[d] || 0) + 1;
+  }
+  const total = data.length;
+  const icons = { mobile: '📱', desktop: '🖥️', tablet: '📟', unknown: '❓' };
+
+  const cards = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([device, count]) => `
+      <div class="device-card">
+        <div class="icon">${icons[device] || '❓'}</div>
+        <div class="pct">${pct(count, total)}%</div>
+        <div class="name">${device}</div>
+        <div class="count">${count} sesji</div>
+      </div>`).join('');
+
+  const mobilePct = parseFloat(pct(counts['mobile'] || 0, total));
+  const desktopPct = parseFloat(pct(counts['desktop'] || 0, total));
+  let uxNote = '';
+  if (mobilePct > 55) {
+    uxNote = `Dominuje mobile (${mobilePct}%) — interfejs formularza powinien być
+    zoptymalizowany pod dotyk: duże pola, duże przyciski CTA, brak hover-only elementów.
+    Rozważ sticky CTA na dole ekranu.`;
+  } else if (desktopPct > 55) {
+    uxNote = `Dominuje desktop (${desktopPct}%) — można stosować bardziej
+    złożone układy. Warto jednak nie zaniedbywać mobile, bo stanowi istotny ruch.`;
+  } else {
+    uxNote = `Ruch jest zrównoważony między urządzeniami — stosuj podejście
+    "mobile-first responsive": zapewnij pełną funkcjonalność na każdym ekranie.`;
+  }
+
+  return `
+    <div class="section" id="s4">
+      <h2>📱 Funkcja 4 <span class="badge">Bonus · Urządzenia</span></h2>
+      <div class="device-grid">${cards}</div>
+      <p class="note">💡 Implikacje UX: ${uxNote}</p>
+    </div>`;
+}
+
+// ─── Wnioski ────────────────────────────────────────────────────────────────
+
+function conclusions() {
+  return `
+    <div class="section conclusions" id="s5">
+      <h2>🧠 Wnioski i hipotezy</h2>
+      <ol>
+        <li>
+          <strong>Bounce rate</strong> — strony z wysokim odsetkiem odbić
+          wymagają audytu treści "above the fold". Pierwsze 3 sekundy decydują
+          o tym, czy użytkownik zostanie — sprawdź nagłówki i CTA.
+        </li>
+        <li>
+          <strong>Drop-off formularza</strong> — największe porzucenia przed
+          krokiem płatności to klasyczny wzorzec. Rekomendacja: wskaźnik postępu
+          (progress bar) + informacja o bezpieczeństwie przy kroku 3.
+        </li>
+        <li>
+          <strong>Top kliknięć</strong> — jeśli najczęściej klikane elementy
+          nie prowadzą do konwersji, to "pułapka UX" — użytkownicy klikają
+          z przyzwyczajenia, nie z intencji. Sprawdź ścieżki nawigacji.
+        </li>
+        <li>
+          <strong>Rozkład urządzeń</strong> — każda decyzja projektowa (np. hover
+          tooltip, duże tabele, multi-kolumnowe formularze) powinna być weryfikowana
+          na dominującym typie urządzenia przed wdrożeniem.
+        </li>
+        <li>
+          <strong>Następne kroki</strong> — połącz dane z timestamp_bucket, żeby
+          sprawdzić czy porzucenia formularza koncentrują się o konkretnych porach
+          (np. "evening" → zmęczeni użytkownicy = uproszczone UX).
+        </li>
+      </ol>
+    </div>`;
+}
+
+// ─── Główna logika — fetch + parse ─────────────────────────────────────────
+
+const statusEl = document.getElementById('status');
+const app = document.getElementById('app');
+
+Papa.parse('../sessions_lab12.csv', {
+  download: true,
+  header: true,
+  dynamicTyping: true,
+  skipEmptyLines: true,
+  complete({ data, errors }) {
+    if (errors.length) {
+      statusEl.className = 'error';
+      statusEl.textContent = `Błąd parsowania CSV: ${errors[0].message}`;
+      return;
+    }
+    statusEl.remove();
+    app.innerHTML =
+      bounceRateByPage(data) +
+      formDropOff(data) +
+      topClicks(data, 5) +
+      deviceDistribution(data) +
+      conclusions();
+  },
+  error(err) {
+    statusEl.className = 'error';
+    statusEl.textContent = `Nie udało się pobrać pliku CSV: ${err.message}`;
+  },
+});
+</script>
+</body>
+</html>
