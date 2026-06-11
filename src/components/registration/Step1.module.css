@@ -1,0 +1,101 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 480px;
+  width: 100%;
+}
+
+.heading {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+
+.required {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: -0.5rem;
+}
+
+/* Widoczny tylko gdy zawiera treść — pusty div nie zajmuje miejsca */
+.rootError {
+  font-size: 0.875rem;
+  color: #B71C1C;
+  font-weight: 500;
+  min-height: 0;
+  /* Nie używamy display:none — aria-live musi być w DOM przez cały czas */
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.field input {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: #fff;
+  color: #111827;
+}
+
+.field input:focus {
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
+}
+
+/* Red border when aria-invalid=true */
+.field input[aria-invalid='true'] {
+  border-color: #dc2626;
+}
+
+.field input[aria-invalid='true']:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.error {
+  font-size: 0.8rem;
+  color: #B71C1C;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.submit {
+  margin-top: 0.5rem;
+  height: 44px;
+  padding: 0 24px;
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.15s;
+}
+
+.submit:hover:not(:disabled) {
+  background: #1e40af;
+}
+
+.submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

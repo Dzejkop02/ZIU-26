@@ -1,0 +1,23 @@
+:root {
+  --font-h1:    clamp(1.5rem, 4vw, 2.5rem);
+  --font-h2:    clamp(1.25rem, 3vw, 2rem);
+  --font-body:  clamp(0.875rem, 2vw, 1.125rem);
+  --font-small: clamp(0.75rem, 1.5vw, 0.875rem);
+}
+
+h1 {
+  font-size: var(--font-h1);
+}
+
+h2 {
+  font-size: var(--font-h2);
+}
+
+body {
+  font-size: var(--font-body);
+}
+
+.meta,
+.small {
+  font-size: var(--font-small);
+}

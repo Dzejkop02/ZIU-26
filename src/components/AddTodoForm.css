@@ -1,0 +1,102 @@
+.add-todo-panel {
+  width: 420px;
+  min-height: 100svh;
+  background: var(--color-bg);
+  padding: 48px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.add-todo-panel__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.add-todo-panel__input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.add-todo-panel__input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.add-todo-panel__input:focus {
+  border-color: var(--color-primary-hover);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+.add-todo-panel__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.add-todo-panel__submit {
+  flex: 1;
+  height: 44px;
+  background: var(--color-primary);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.add-todo-panel__submit:hover {
+  background: var(--color-primary-hover);
+}
+
+.add-todo-panel__cancel {
+  flex: 1;
+  height: 44px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.add-todo-panel__cancel:hover {
+  background: var(--color-card);
+}
+
+.add-todo-panel__date {
+  color-scheme: light dark;
+}
+
+.add-todo-panel__select {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.add-todo-panel__select:focus {
+  border-color: var(--color-primary);
+}

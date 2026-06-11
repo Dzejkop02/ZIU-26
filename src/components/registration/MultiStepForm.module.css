@@ -1,0 +1,111 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  width: 100%;
+}
+
+.breadcrumbList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  position: relative;
+}
+
+/* Connecting line between steps */
+.breadcrumbItem:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(18px + 0.5rem);
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: #e5e7eb;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.breadcrumbItem--done::after {
+  background: #1d4ed8;
+}
+
+.breadcrumbDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.breadcrumbItem--active .breadcrumbDot {
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+}
+
+.breadcrumbItem--active .breadcrumbLabel {
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.breadcrumbItem--done .breadcrumbDot {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #fff;
+}
+
+.breadcrumbItem--done .breadcrumbLabel {
+  color: #374151;
+}
+
+.breadcrumbLabel {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.rootError {
+  font-size: 0.875rem;
+  color: #B71C1C;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+}
+
+/* ── Nagłówek kroku ── */
+.stepHeading {
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  /* tabIndex={-1} → tylko fokus programatyczny; :focus-visible samodzielnie pomija ten przypadek */
+}

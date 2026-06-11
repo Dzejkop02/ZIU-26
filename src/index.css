@@ -1,0 +1,101 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+@import "./styles/_typography.css";
+
+/* Mobile-first reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  font-size: var(--font-body);
+  background: #F5F7FA;
+}
+
+/* ── Dostępność: focus-visible — nigdy nie usuwamy outline bez zamiennika ── */
+*:focus-visible {
+  outline: 2px solid #1565C0;
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #1565C0;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* MUI nadpisuje outline — przywracamy dla elementów MUI */
+.MuiButtonBase-root:focus-visible,
+.MuiInputBase-root:focus-visible,
+.MuiCheckbox-root:focus-visible {
+  outline: 2px solid #1565C0;
+  outline-offset: 2px;
+}
+
+/* ── Skip navigation link ── */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #0043FF;
+  color: white;
+  padding: 8px 16px;
+  z-index: 9999;
+  font-weight: bold;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Visually hidden (a11y utility) ── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Style modalu ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 560px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* ── Błędy formularzy — kontrast min 4.5:1 na białym tle (WCAG 1.4.3) ── */
+/* #B71C1C na #FFFFFF = kontrast 7.0:1 */
+.error-message {
+  color: #B71C1C;
+  font-size: 0.8rem;
+  display: block;
+  margin-top: 0.25rem;
+}
