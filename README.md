@@ -4,7 +4,7 @@ Aplikacja webowa do zarządzania zadaniami (To-Do / Task Manager) zbudowana w Re
 
 ## Demo
 
-🔗 **Wersja live:** _[wstaw link po wdrożeniu na Vercel / Netlify]_
+🔗 **Wersja live:** [https://ziu-todo-app-bv79.vercel.app](https://ziu-todo-app-bv79.vercel.app)
 
 🔗 **Repozytorium GitHub:** [github.com/Dzejkop02/ZIU-26](https://github.com/Dzejkop02/ZIU-26)
 
