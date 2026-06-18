@@ -8,6 +8,8 @@ Aplikacja webowa do zarządzania zadaniami (To-Do / Task Manager) zbudowana w Re
 
 🔗 **Repozytorium GitHub:** [github.com/Dzejkop02/ZIU-26](https://github.com/Dzejkop02/ZIU-26)
 
+🔗 **Projekt w Figmie:** [figma.com/design](https://www.figma.com/design/EEJoMFGDOGscgQhKXPuBk9/36417_wiecek_jakub_lab3?node-id=0-1&t=xYQhKbMTAslkR0RG-1)
+
 ---
 
 ## Opis projektu
@@ -24,15 +26,15 @@ Aplikacja korzysta z mockowanego API (MSW), dzięki czemu działa w pełni bez b
 
 ### Realizacja wymagań projektu
 
-| Obszar | Realizacja |
-|--------|------------|
-| **1. Interfejs** | Komponenty wielokrotnego użytku (`TodoItem`, `TodoList`, `FilterBar`, `AddTodoForm`, modale, formularz rejestracji); routing 3 widoków (`/`, `/stats`, `/settings`); MUI |
-| **2. Responsive Design** | Breakpointy mobile / tablet / desktop; responsywny toolbar, siatka kart, overlay formularza na mobile |
-| **3. Formularze** | Wieloetapowa rejestracja z React Hook Form + Zod; walidacja i komunikaty błędów; formularz dodawania zadania |
-| **4. Dostępność WCAG** | Semantyczny HTML, ARIA, skip link, focus trap w modalach, kontrast AA, audyt Lighthouse Accessibility: **100/100** |
-| **5. State Management** | Context API (`TodoContext`, `AuthContext`, `NotificationContext`, `ThemeProvider`); stany loading / success / error |
-| **6. API / mock** | MSW: GET, POST, PATCH, DELETE; obsługa błędów sieciowych (Alert, Snackbar) |
-| **7. Animacje** | Framer Motion (przejścia widoków, lista zadań); spinnery ładowania; snackbary sukcesu/błędu |
+| Obszar                   | Realizacja                                                                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **1. Interfejs**         | Komponenty wielokrotnego użytku (`TodoItem`, `TodoList`, `FilterBar`, `AddTodoForm`, modale, formularz rejestracji); routing 3 widoków (`/`, `/stats`, `/settings`); MUI |
+| **2. Responsive Design** | Breakpointy mobile / tablet / desktop; responsywny toolbar, siatka kart, overlay formularza na mobile                                                                    |
+| **3. Formularze**        | Wieloetapowa rejestracja z React Hook Form + Zod; walidacja i komunikaty błędów; formularz dodawania zadania                                                             |
+| **4. Dostępność WCAG**   | Semantyczny HTML, ARIA, skip link, focus trap w modalach, kontrast AA, audyt Lighthouse Accessibility: **100/100**                                                       |
+| **5. State Management**  | Context API (`TodoContext`, `AuthContext`, `NotificationContext`, `ThemeProvider`); stany loading / success / error                                                      |
+| **6. API / mock**        | MSW: GET, POST, PATCH, DELETE; obsługa błędów sieciowych (Alert, Snackbar)                                                                                               |
+| **7. Animacje**          | Framer Motion (przejścia widoków, lista zadań); spinnery ładowania; snackbary sukcesu/błędu                                                                              |
 
 ---
 
@@ -67,17 +69,17 @@ npm run lint     # sprawdzenie kodu ESLint
 
 ## Użyte technologie
 
-| Kategoria | Technologie |
-|-----------|-------------|
-| **Core** | React 19, TypeScript, Vite |
-| **UI** | Material UI (MUI) 7, Emotion, Roboto |
-| **Routing** | React Router DOM 7 |
-| **Formularze** | React Hook Form, Zod, @hookform/resolvers |
-| **Stan globalny** | Context API |
-| **API mock** | MSW (Mock Service Worker) 2 |
-| **Animacje** | Framer Motion |
-| **Styling** | CSS custom properties, Tailwind CSS 4 (reset / typografia) |
-| **Narzędzia** | ESLint, TypeScript ESLint |
+| Kategoria         | Technologie                                                |
+| ----------------- | ---------------------------------------------------------- |
+| **Core**          | React 19, TypeScript, Vite                                 |
+| **UI**            | Material UI (MUI) 7, Emotion, Roboto                       |
+| **Routing**       | React Router DOM 7                                         |
+| **Formularze**    | React Hook Form, Zod, @hookform/resolvers                  |
+| **Stan globalny** | Context API                                                |
+| **API mock**      | MSW (Mock Service Worker) 2                                |
+| **Animacje**      | Framer Motion                                              |
+| **Styling**       | CSS custom properties, Tailwind CSS 4 (reset / typografia) |
+| **Narzędzia**     | ESLint, TypeScript ESLint                                  |
 
 ---
 
@@ -100,17 +102,17 @@ src/
 
 Elementy wykraczające poza wymagania podstawowe:
 
-| Element | Opis |
-|---------|------|
-| **TypeScript** | Cały kod źródłowy w TS — lepsza czytelność i bezpieczeństwo typów |
-| **Tryb ciemny** | Przełącznik motywu w navbarze i na stronie Ustawienia; spójne tokeny kolorów CSS + motyw MUI |
-| **Wieloetapowa rejestracja** | Formularz 3-krokowy z breadcrumbem, podsumowaniem i obsługą błędu serwera (np. zajęty e-mail) |
-| **System powiadomień** | Snackbar MUI (sukces / błąd / info) po akcjach CRUD i rejestracji |
-| **Zaawansowana dostępność** | Skip link, focus trap, `aria-live`, widoczny `:focus-visible`, audyt Lighthouse 100/100 |
-| **Animacje listy zadań** | `AnimatePresence` — płynne dodawanie i usuwanie kart zadań |
-| **Per-użytkownikowe zadania** | Po zalogowaniu lista zadań filtrowana po `userId`; gość ma osobny zestaw |
-| **Statystyki** | Osobny widok z podsumowaniem: aktywne, ukończone, procent realizacji, priorytety |
-| **Responsywność 3-poziomowa** | Mobile (<768px), tablet (768–1023px), desktop (≥1024px) |
+| Element                       | Opis                                                                                          |
+| ----------------------------- | --------------------------------------------------------------------------------------------- |
+| **TypeScript**                | Cały kod źródłowy w TS — lepsza czytelność i bezpieczeństwo typów                             |
+| **Tryb ciemny**               | Przełącznik motywu w navbarze i na stronie Ustawienia; spójne tokeny kolorów CSS + motyw MUI  |
+| **Wieloetapowa rejestracja**  | Formularz 3-krokowy z breadcrumbem, podsumowaniem i obsługą błędu serwera (np. zajęty e-mail) |
+| **System powiadomień**        | Snackbar MUI (sukces / błąd / info) po akcjach CRUD i rejestracji                             |
+| **Zaawansowana dostępność**   | Skip link, focus trap, `aria-live`, widoczny `:focus-visible`, audyt Lighthouse 100/100       |
+| **Animacje listy zadań**      | `AnimatePresence` — płynne dodawanie i usuwanie kart zadań                                    |
+| **Per-użytkownikowe zadania** | Po zalogowaniu lista zadań filtrowana po `userId`; gość ma osobny zestaw                      |
+| **Statystyki**                | Osobny widok z podsumowaniem: aktywne, ukończone, procent realizacji, priorytety              |
+| **Responsywność 3-poziomowa** | Mobile (<768px), tablet (768–1023px), desktop (≥1024px)                                       |
 
 ---
 
@@ -147,18 +149,18 @@ Projekt projektowany jest pod Kasię: główna akcja (dodanie zadania) dostępna
 
 ### Odniesienie do heurystyk Nielsena
 
-| Heurystyka | Zastosowanie w projekcie |
-|------------|--------------------------|
-| **1. Widoczność statusu systemu** | Spinner (`CircularProgress`) podczas ładowania zadań; licznik „X aktywnych / Y wszystkich”; snackbar po każdej akcji CRUD; stan `aria-busy` przy submitach formularzy |
-| **2. Dopasowanie do świata rzeczywistego** | Polskie etykiety (Niski / Średni / Wysoki), format daty `dd.mm.rrrr`, znane wzorce (navbar, karty, modal) |
-| **3. Kontrola i wolność użytkownika** | Anulowanie formularzy (przycisk „Anuluj”, Escape w modalach, klik poza overlay); cofanie w rejestracji (krok wstecz) |
-| **4. Spójność i standardy** | MUI jako spójny system komponentów; jednolite zaokrąglenia, kolory primary; ten sam styl modalu (logowanie, profil, szczegóły zadania) |
-| **5. Zapobieganie błędom** | Walidacja Zod (hasło, e-mail, zgoda RODO); wyłączony przycisk „Dodaj” przy pustym tytule; `noValidate` + własne komunikaty zamiast domyślnych tooltipów przeglądarki |
-| **6. Rozpoznawanie zamiast przypominania** | Podsumowanie danych w kroku 3 rejestracji; filtry „Wszystko / Aktywne / Ukończone” zawsze widoczne po kliknięciu „Filtruj” |
-| **7. Elastyczność i efektywność** | Wyszukiwarka na liście; szybka edycja tytułu (double-click); zmiana priorytetu bez otwierania modalu |
-| **8. Estetyka i minimalizm** | Toolbar z trzema akcjami (szukaj, dodaj, filtruj); statystyki na osobnej stronie — brak przeładowania głównego widoku |
-| **9. Pomoc w rozpoznawaniu i naprawianiu błędów** | Komunikaty błędów przy polach (`role="alert"`, czerwony tekst, `aria-describedby`); błąd sieciowy jako Alert MUI na liście |
-| **10. Pomoc i dokumentacja** | Sekcja „Dostępność” na stronie Ustawienia z informacją o nawigacji klawiaturą |
+| Heurystyka                                        | Zastosowanie w projekcie                                                                                                                                              |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1. Widoczność statusu systemu**                 | Spinner (`CircularProgress`) podczas ładowania zadań; licznik „X aktywnych / Y wszystkich”; snackbar po każdej akcji CRUD; stan `aria-busy` przy submitach formularzy |
+| **2. Dopasowanie do świata rzeczywistego**        | Polskie etykiety (Niski / Średni / Wysoki), format daty `dd.mm.rrrr`, znane wzorce (navbar, karty, modal)                                                             |
+| **3. Kontrola i wolność użytkownika**             | Anulowanie formularzy (przycisk „Anuluj”, Escape w modalach, klik poza overlay); cofanie w rejestracji (krok wstecz)                                                  |
+| **4. Spójność i standardy**                       | MUI jako spójny system komponentów; jednolite zaokrąglenia, kolory primary; ten sam styl modalu (logowanie, profil, szczegóły zadania)                                |
+| **5. Zapobieganie błędom**                        | Walidacja Zod (hasło, e-mail, zgoda RODO); wyłączony przycisk „Dodaj” przy pustym tytule; `noValidate` + własne komunikaty zamiast domyślnych tooltipów przeglądarki  |
+| **6. Rozpoznawanie zamiast przypominania**        | Podsumowanie danych w kroku 3 rejestracji; filtry „Wszystko / Aktywne / Ukończone” zawsze widoczne po kliknięciu „Filtruj”                                            |
+| **7. Elastyczność i efektywność**                 | Wyszukiwarka na liście; szybka edycja tytułu (double-click); zmiana priorytetu bez otwierania modalu                                                                  |
+| **8. Estetyka i minimalizm**                      | Toolbar z trzema akcjami (szukaj, dodaj, filtruj); statystyki na osobnej stronie — brak przeładowania głównego widoku                                                 |
+| **9. Pomoc w rozpoznawaniu i naprawianiu błędów** | Komunikaty błędów przy polach (`role="alert"`, czerwony tekst, `aria-describedby`); błąd sieciowy jako Alert MUI na liście                                            |
+| **10. Pomoc i dokumentacja**                      | Sekcja „Dostępność” na stronie Ustawienia z informacją o nawigacji klawiaturą                                                                                         |
 
 ### Zasady UCD i własne obserwacje
 
